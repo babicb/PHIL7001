@@ -1,0 +1,353 @@
+---
+title: "Lecture 13"
+author: "Yiwen Li"
+date: "2023-08-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+# Make sure to install all the parckages below before running this chunk
+library(randomForest)
+library(pROC)
+library(caret)
+library(dplyr)
+library(ggplot2)
+library(glmnet)
+library(e1071)
+```
+
+# Generate the dataset
+
+```{r}
+# Create a sample dataframe with distinct groups for males and females
+set.seed(123)
+n <- 100
+
+# Simulate data for females with more overlap
+female_body_fat <- runif(n/2, min = 15, max = 28)  # Increase max value
+female_exercise <- runif(n/2, min = 1, max = 8)   # Increase max value
+female_data <- data.frame(exercise = female_exercise, body_fat = female_body_fat, gender = 0)
+
+# Simulate data for males with more overlap
+male_body_fat <- runif(n/2, min = 18, max = 30)   # Decrease min value
+male_exercise <- runif(n/2, min = 3, max = 10)   # Decrease min value
+male_data <- data.frame(exercise = male_exercise, body_fat = male_body_fat, gender = 1)
+
+# Combine data for males and females
+data <- rbind(female_data, male_data)
+
+# Convert 'gender' to factor
+data$gender <- as.factor(data$gender)
+```
+
+```{r}
+# Glimpse the dataset
+glimpse(data)
+```
+# Visualize the data
+
+```{r}
+ggplot(data, aes(x = exercise, y = body_fat, color = gender)) +
+  geom_point() +
+  labs(title = "Exercise vs. Body Fat",
+       x = "Exercise",
+       y = "Body Fat %") +
+  scale_color_manual(values = c("red", "blue"), labels = c("Female", "Male")) +
+  theme_minimal()
+```
+
+# Split the data into training and testing sets
+
+```{r}
+# Split the data into training and testing sets (70% train and 30% test)
+trainIndex <- createDataPartition(data$gender, p = .7, list = FALSE)
+data_train <- data[trainIndex,]
+data_test  <- data[-trainIndex,]
+```
+
+# Train the classifiers
+
+```{r}
+# Logistic Regression Model
+logistic_model <- glm(gender ~ exercise + body_fat, data = data_train, family = "binomial")
+
+# Train the Random Forest classifier
+rf_model <- randomForest(gender ~ exercise + body_fat, data = data_train, ntree = 500)
+
+# Train the SVM classifier
+svm_model <- svm(gender ~ exercise + body_fat, data = data_train, kernel = "radial", probability = TRUE)
+```
+
+# Predictions and Confusion Matrix
+
+## Logistic Regression
+
+```{r}
+# Predict on the test set
+probs <- predict(logistic_model, newdata = data_test, type = "response")
+predictions <- ifelse(probs > 0.5, 1, 0)
+```
+
+```{r}
+# Compute evaluation metrics
+confusion <- confusionMatrix(as.factor(predictions), as.factor(data_test$gender))
+accuracy <- confusion$overall['Accuracy']
+precision <- confusion$byClass['Pos Pred Value']
+recall <- confusion$byClass['Sensitivity']
+F1 <- 2 * (precision * recall) / (precision + recall)
+```
+
+```{r}
+# Print metrics
+print(paste("Accuracy: ", round(accuracy, 2)))
+print(paste("Precision: ", round(precision, 2)))
+print(paste("Recall: ", round(recall, 2)))
+print(paste("F1 Score: ", round(F1, 2)))
+```
+
+## Random Forests
+
+```{r}
+# Make predictions on the test data
+predictions <- predict(rf_model, data_test)
+
+# Create a confusion matrix
+conf_matrix <- table(predictions, data_test$gender)
+print(conf_matrix)
+```
+
+```{r}
+# Compute evaluation metrics
+confusion <- confusionMatrix(as.factor(predictions), as.factor(data_test$gender))
+accuracy <- confusion$overall['Accuracy']
+precision <- confusion$byClass['Pos Pred Value']
+recall <- confusion$byClass['Sensitivity']
+F1 <- 2 * (precision * recall) / (precision + recall)
+```
+
+```{r}
+# Print metrics
+print(paste("Accuracy: ", round(accuracy, 2)))
+print(paste("Precision: ", round(precision, 2)))
+print(paste("Recall: ", round(recall, 2)))
+print(paste("F1 Score: ", round(F1, 2)))
+```
+## SVM
+
+```{r}
+# Make predictions on the test data
+predictions <- predict(svm_model, data_test)
+
+# Create a confusion matrix
+conf_matrix <- table(predictions, data_test$gender)
+print(conf_matrix)
+```
+
+```{r}
+# Compute evaluation metrics
+confusion <- confusionMatrix(as.factor(predictions), as.factor(data_test$gender))
+accuracy <- confusion$overall['Accuracy']
+precision <- confusion$byClass['Pos Pred Value']
+recall <- confusion$byClass['Sensitivity']
+F1 <- 2 * (precision * recall) / (precision + recall)
+
+```
+
+```{r}
+# Print metrics
+print(paste("Accuracy: ", round(accuracy, 2)))
+print(paste("Precision: ", round(precision, 2)))
+print(paste("Recall: ", round(recall, 2)))
+print(paste("F1 Score: ", round(F1, 2)))
+```
+
+# Decision Boundary
+
+## Logistic Regression
+
+```{r}
+# To generate the prediction plot
+# Create a grid of points
+exercise_range <- seq(min(data$exercise), max(data$exercise), length.out = 100)
+body_fat_range <- seq(min(data$body_fat), max(data$body_fat), length.out = 100)
+
+grid_points <- expand.grid(exercise = exercise_range, body_fat = body_fat_range)
+
+# Predict on grid points
+grid_points$logistic_prediction <- predict(logistic_model, newdata = grid_points, type = "response")
+grid_points$predicted_class <- ifelse(grid_points$logistic_prediction > 0.5, 1, 0)
+```
+
+
+```{r}
+# Create a heatmap plot to visualize the decision boundary
+ggplot(data) +
+  geom_tile(data = grid_points, aes(x = exercise, y = body_fat, fill = as.factor(predicted_class)), alpha = 0.3) +
+  geom_point(aes(x = exercise, y = body_fat, color = factor(gender))) +
+  scale_color_manual(values = c("red", "blue"), name = "Gender", labels = c("Female", "Male")) +
+  scale_fill_manual(values = c("red", "lightblue"), guide='none') +
+  labs(title = "Decision Boundaries: Logistic Regression",
+       x = "Exercise", y = "Body Fat %") +
+  theme_minimal()
+```
+
+
+## Random Forests
+
+```{r}
+# Create a grid of points covering the feature space
+x_range <- seq(min(data_train$exercise), max(data_train$exercise), length.out = 200)
+y_range <- seq(min(data_train$body_fat), max(data_train$body_fat), length.out = 200)
+grid_points <- expand.grid(exercise = x_range, body_fat = y_range)
+
+# Predict class probabilities for each point in the grid
+grid_probs <- predict(rf_model, newdata = grid_points, type = "prob")
+
+# Create a scatter plot with color-coded points based on predicted probabilities
+plot(data_train$exercise, data_train$body_fat, pch = 19, col = as.numeric(data_train$gender) + 1,
+     xlab = "Exercise", ylab = "Body Fat", main = "Decision Boundary of Random Forest")
+points(grid_points$exercise, grid_points$body_fat, pch = ".", col = rgb(grid_probs[, 1], 0, grid_probs[, 2]))
+
+# Add legend
+legend("topright", legend = c("Female", "Male"), pch = c(19, 19), col = c(2, 4))
+```
+
+```{r}
+# Create a grid of points covering the feature space
+x_range <- seq(min(data_train$exercise), max(data_train$exercise), length.out = 200)
+y_range <- seq(min(data_train$body_fat), max(data_train$body_fat), length.out = 200)
+grid_points <- expand.grid(exercise = x_range, body_fat = y_range)
+
+# Predict class probabilities for each point in the grid
+grid_probs <- predict(rf_model, newdata = grid_points, type = "prob")
+
+# Create a scatter plot with color-coded points based on predicted probabilities
+plot(data_train$exercise, data_train$body_fat, 
+     pch = ifelse(data_train$gender == 0, 4, 1), 
+     cex = 1.2, 
+     col = "black",
+     xlab = "Exercise", ylab = "Body Fat", 
+     main = "Decision Boundary of Random Forest")
+
+# Add grid points with decision boundaries
+points(grid_points$exercise, grid_points$body_fat, 
+       pch = ".", 
+       col = rgb(grid_probs[, 1], 0, grid_probs[, 2])) # Switched color order for red and blue
+
+# Add a legend to identify classes with new shapes
+legend("topright", legend = c("Female", "Male"), 
+       pch = c(4, 1), 
+       pt.cex = 1.2, # Increase the size for the legend as well
+       col = "black")
+```
+
+## SVM
+
+```{r}
+# Create a grid of points covering the feature space
+x_range <- seq(min(data_train$exercise), max(data_train$exercise), length.out = 200)
+y_range <- seq(min(data_train$body_fat), max(data_train$body_fat), length.out = 200)
+grid_points <- expand.grid(exercise = x_range, body_fat = y_range)
+
+# Predict class labels for each point in the grid
+grid_predictions <- predict(svm_model, newdata = grid_points)
+
+# Reshape predictions for contour plotting
+matrix_predictions <- matrix(grid_predictions, ncol = length(x_range))
+
+# Create a contour plot
+contour(x_range, y_range, matrix_predictions, levels = c(0, 1),
+        labels = c("Female", "Male"), col = c("red", "blue"),
+        main = "SVM Decision Boundary")
+
+# Plot the original data points for females and males
+points(data_train[data_train$gender == 0, c("exercise", "body_fat")], pch = 19, col = "red")
+points(data_train[data_train$gender == 1, c("exercise", "body_fat")], pch = 19, col = "blue")
+
+# Plot the support vectors
+points(data_train[svm_model$index, c("exercise", "body_fat")], pch = 4, col = "black")
+
+# Add legend
+legend("topright", legend = c("Female", "Male", "Support Vectors"),
+       pch = c(19, 19, 4), col = c("red", "blue", "black"))
+
+
+```
+
+```{r}
+# Predict on grid points to visualize decision boundary
+x_range <- seq(min(data_train$exercise), max(data_train$exercise), length.out = 200)
+y_range <- seq(min(data_train$body_fat), max(data_train$body_fat), length.out = 200)
+grid_points <- expand.grid(exercise = x_range, body_fat = y_range)
+
+
+# Predict class labels for grid points
+grid_points$predicted_class <- predict(svm_model, newdata = grid_points)
+
+# Plot the decision boundaries and data points
+ggplot(data) +
+  geom_tile(data = grid_points, aes(x = exercise, y = body_fat, fill = as.factor(predicted_class)), alpha = 0.3) +
+  geom_point(aes(x = exercise, y = body_fat, color = factor(gender))) +
+  scale_color_manual(values = c("red", "blue"), name = "Gender", labels = c("Female", "Male")) +
+  scale_fill_manual(values = c("red", "lightblue"), guide='none') +
+  labs(title = "Decision Boundaries: SVM",
+       x = "Exercise", y = "Body Fat %") +
+  theme_minimal()
+
+```
+
+# ROC curve
+
+## Logistic Regression
+
+```{r, message=FALSE}
+# ROC Curve & AUC
+probs <- predict(logistic_model, newdata = data_test, type = "response")
+roc_obj <- roc(data_test$gender, probs)
+auc_val <- auc(roc_obj)
+plot(roc_obj, main=paste("ROC Curve for Logistic Classifier"))
+legend("bottomright", paste("AUC =", round(auc_val, 2)), cex = 0.8)
+```
+
+## Random Forests
+
+```{r, message=FALSE}
+# Get the predicted class probabilities for ROC curve
+class_probs <- predict(rf_model, data_test, type = "prob")
+
+# Compute ROC curve and AUC
+roc_obj <- roc(data_test$gender, class_probs[, 2])
+roc_auc <- auc(roc_obj)
+
+# Plot the ROC curve
+plot(roc_obj, main = "ROC Curve for Random Forests")
+legend("bottomright", paste("AUC =", round(roc_auc, 2)), cex = 0.8)
+```
+
+## SVM
+
+```{r, message=FALSE}
+# Get predicted class probabilities for ROC curve
+class_probs <- predict(svm_model, data_test, probability = TRUE)
+
+# Get predicted class probabilities for ROC curve
+class_probs <- attr(predict(svm_model, data_test, probability = TRUE), "probabilities")
+
+# Compute ROC curve and AUC
+roc_obj <- roc(data_test$gender, class_probs[, 2])
+
+roc_auc <- auc(roc_obj)
+
+# Plot the ROC curve
+plot(roc_obj, main = "ROC Curve for SVM")
+legend("bottomright", paste("AUC =", round(roc_auc, 2)), cex = 0.8)
+```
+
+
+
+
+
