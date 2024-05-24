@@ -1,0 +1,38 @@
+---
+title: "Installing R and R Studios"
+output: html_document
+---
+
+Welcome to the notebook tutorial! In this comprehensive guide, we will walk you through the step-by-step instructions for setting up a complete data science environment using R, Rstudio, and Jupyter Notebook.
+
+# Installing R and Rstudio
+
+- **R**: To download R, navigate to the Comprehensive R Archive Network, or CRAN, at https://cloud.r-project.org. CRAN offers tailored versions of R for various operating systems including Windows, Mac, and Linux, ensuring broad accessibility. For the purposes of this course, we recommend using R version 4.2.0 or later.
+- **RStudio**: This is an Integrated Development Environment (IDE) for R. It provides a user-friendly interface and powerful tools for using R. It can be downloaded from https://posit.co/download/rstudio-desktop/. RStudio is basically the way you will interact with R!
+
+# Setting up the data science enviornment
+
+## Rstudio Environment
+
+When you open R-Studio you will see a window with four panes. Here are the default positions:
+
+- **Top-Left**: The source pane where you can open/edit code files and save for future use.
+- **Bottom-Left**: The console where you can type in the codes and where R prints the numeric outputs.
+- **Top-Right**: The “Environment” pane where the information of any object (scalars, vectors or data-sets) created in any session show up.
+- **Bottom-Right**: The “plots” pane where any graphical output will show up.
+
+NOTE: WE WILL NOT USE JUPYTER NOTEBOOK EXTENSIVELY. THIS SECTION IS OPTIONAL.
+
+Jupyter Notebook is a powerful interactive computing platform that supports multiple programming languages, including R. It enables you to create and share documents that combine live code, equations, visualizations, and narrative text in a single environment.
+
+**Step 1: Install Anaconda** Jupyter Notebook is most commonly installed through the Anaconda distribution, which includes Python and many popular data science libraries. Go to the Anaconda website (https://www.anaconda.com/products/individual) and download the installer for your operating system (Windows, macOS, or Linux). Choose the appropriate version and follow the installation instructions for your operating system.
+
+**Step 2. Launch Anaconda Navigator** After installing Anaconda, open the Anaconda Navigator. You can find it in your Start Menu (Windows) or Applications folder (macOS). This application provides a user-friendly interface to manage your Anaconda environments and packages.
+
+**Step 3: Create a new environment (optional)** Creating a separate environment for your Jupyter Notebook projects is a good practice to keep your projects isolated. You can create an environment with the necessary R version and packages for your Jupyter Notebook work. To create an environment, go to the "Environments" tab in Anaconda Navigator, click on the "Create" button, give your environment a name, choose the R version, and install any required packages (we will talk about R packages soon).
+
+**Step 4: Launch Jupyter Notebook** Once you have Anaconda installed and, optionally, an environment set up, go to the "Home" tab in Anaconda Navigator. Under the "Applications on" dropdown menu, select the environment you want to use (if you created one). Then, click on the "Launch" button next to "Jupyter Notebook." This will open Jupyter Notebook in your default web browser.
+
+**Step 5: Start using Jupyter Notebook** Congratulations! You have successfully launched Jupyter Notebook. You can now navigate through your file system using the Jupyter interface and create new notebooks or open existing ones. Click on the "New" button and choose "R" (or any other kernel you may need) to create a new notebook. This will open a new notebook where you can write and execute R code.
+
+**Step 6: Saving and Closing** In Jupyter Notebook, remember to save your work regularly by clicking the "Save and Checkpoint" option under the "File" menu. When you're done working on a notebook, you can close it by selecting "Close and Halt" under the "File" menu. To stop the Jupyter Notebook server, go back to the Anaconda Navigator and click on the "Quit" button next to "Jupyter Notebook."

@@ -1,0 +1,679 @@
+---
+title: "Introduction to R"
+output: pdf_document
+---
+
+# Introduction to Statistical Computing: R and RStudio
+
+In this session, we'll be diving into the fascinating world of R, a powerful language designed for statistical computing and graphics. R is widely used in both academia and industry due to its robustness in handling and analyzing data, and its extensive packages ecosystem.
+
+In this notebook, we'll go from using R for basic calculations to creating and manipulating complex data structures. By the end, you'll have the foundational skills to handle data and create simple visualizations in R, preparing you for more advanced topics in data science and machine learning. Let's embark on this journey into R!
+
+## 1.Installing R and Rstudio
+
+Before we start coding in R, it's essential to have the right tools installed on your computer. You will need two primary tools: R and RStudio.
+
+- **R**: To download R, navigate to the Comprehensive R Archive Network, or CRAN, at https://cloud.r-project.org. CRAN offers tailored versions of R for various operating systems including Windows, Mac, and Linux, ensuring broad accessibility. For the purposes of this course, we recommend using R version 4.2.0 or later.
+- **RStudio**: This is an Integrated Development Environment (IDE) for R. It provides a user-friendly interface and powerful tools for using R. It can be downloaded from https://posit.co/download/rstudio-desktop/. RStudio is basically the way you will interact with R!
+
+## 2.Getting started with R
+
+R is a powerful language for statistical computing, modeling, data analysis, and graphics. The first thing we want to do is understand how to set up our working directory. In R, the working directory is the folder where R will look for and save files by default.
+
+```{r}
+# Get current working directory
+getwd()
+
+# Set a new working directory
+# setwd("/path/to/your/working/directory")
+# setwd("/Users/borisbabic/Documents")
+```
+
+### Installing R packages
+
+Packages are collections of R functions, data, and compiled code. They offer ready-made solutions to perform specific tasks. Here, we'll install the ggplot2 package with the install.packages() function and load the package with `library()`.
+
+Note that once you have successfully installed an R package, you don't need to install it again on the same local computer or server unless you update or remove it. However, to use the functions, data, and other features provided by a specific R package, you need to load the package into your R session each time you start a new R session.
+
+```{r}
+# Installing a package
+# install.packages('ggplot2')
+```
+
+```{r}
+# Loading a package
+library(ggplot2)
+```
+
+## 3.Data Types in R
+
+R supports several data types, also known as classes. These include:
+
+- **Numeric**: This is the default computational data type. If a number has a decimal point, R will interpret it as a numeric value.
+- **Integer**: These are whole numbers without decimal points, e.g. 1L, 2L, 3L. The 'L' tells R to store this number as an integer.
+- **Character**: These are text strings, e.g. "Hello", "World".
+- **Logical**: These are Boolean values, i.e., TRUE or FALSE.
+Let's play around with some of these classes. In R, `class()` is a function that can help us to check the data type.
+
+```{r}
+class("1")
+```
+
+```{r}
+# Use class() function to check the data type
+# Numeric
+class(1.23)
+```
+
+```{r}
+# Integer The suffix ‘L’ is used to specify a numeric value as an integer explicitly.
+class(1L)
+```
+
+```{r}
+# Character
+class("Hello")
+```
+
+```{r}
+# Logical
+class(TRUE)
+```
+
+## 4.Using R as a Calculator
+
+R comes with a suite of built-in functions readily available for your use. These include basic arithmetic functions which we'll explore first to familiarize ourselves with the R environment. Let's give them a try! 
+
+Execute the following code chunk and observe how R performs these simple calculations:
+
+```{r}
+9 + 7
+```
+
+```{r}
+# Addition
+5 + 3
+
+# or sum()
+sum(5,3)
+```
+
+```{r}
+# Subtraction
+10 - 7
+```
+
+```{r}
+# Multiplication
+3 * 2
+```
+
+```{r}
+# Division
+15 / 3
+```
+
+```{r}
+# Exponentiation
+2 ^ 5
+```
+
+```{r}
+# Rounds the input to the desired digit
+round(3.183, 1)
+```
+
+```{r}
+# Print the results
+print(2^5)
+
+# You can also print text
+print('Hello World!')
+```
+
+```{r}
+log(2)
+```
+
+There are some additional examples of functions that R knows:
+
+- `log()`: computes logarithms
+- `sqrt()`: takes the square root
+- `abs()`: returns the absolute value
+- `sin()`: returns the sine
+- `cos()`: returns the cosine
+- `tan()`: returns the tangent
+
+## 5.Logical Operators in R
+
+R contains several operators to perform logical operations. Here are the most commonly used ones:
+
+- `==` : Equal to
+- `!=` : Not equal to
+- `<` : Less than
+- `>` : Greater than
+- `<=` : Less than or equal to
+- `>=` : Greater than or equal to
+- `!` : NOT
+- `&` : AND
+- `|` : OR
+Now, let's try out some logical operations.
+
+```{r}
+# Equal to
+5 == 5
+```
+
+```{r}
+# Not equal to
+5 != 5
+
+5 != 4
+```
+
+```{r}
+# Less than
+3 < 4
+
+# Greater than or equal to
+4 >= 4
+```
+
+```{r}
+# NOT
+!TRUE
+```
+
+```{r}
+# AND
+TRUE & FALSE
+```
+
+```{r}
+# OR
+TRUE | FALSE
+```
+
+```{r}
+# Assigning a variable
+x <- 10
+y = 5
+```
+
+```{r}
+# Check the variable x
+x
+```
+
+```{r}
+# Check the variable y
+y
+```
+
+```{r}
+# Using the variables
+x - 3
+y * 5
+```
+
+```{r}
+z <- 9
+print(z)
+```
+
+But without reassigning them with <- or =, running the above chunk will not change the values stored in the variables.
+
+```{r}
+# Check if the value of x change after running x-3
+x == 7
+
+# x+y still equals to 15
+sum(x,y)
+```
+
+Let's see how we can modify the value of 'x'.
+
+```{r}
+# Reassigning a variable
+x <- 6
+x
+```
+
+```{r}
+x+y
+```
+
+```{r}
+# Incrementing a variable
+x <- x + 1
+x
+```
+
+## 7.Creating Vectors and Matrices
+
+### Vectors
+
+A vector is the simplest type of data structure in R. It contains elements of the same type. We can create a vector using the `c()` function.
+
+```{r}
+# Creating a vector with numeric values named v
+v <- c(1, 2, 3, 4, 5)
+
+# Creating a vector with characters
+t <- c('Alice', 'Tom', 'This is a sentence.')
+```
+
+```{r}
+z < c('1', 2, 3, 4, 5)
+```
+
+```{r}
+print(v)
+```
+
+```{r}
+print(t)
+```
+
+Note that in R, vectors can only contain elements of the same data type. When you create a vector that includes both character and numeric values, the numeric values will be treated as characters. It's important to be mindful of this behavior when working with mixed data types in R to avoid unexpected results or errors in your code.
+
+```{r}
+a <- c('text', 1, 2)
+```
+
+```{r}
+class(a)
+```
+
+### Matrices
+
+A matrix is a two-dimensional data structure where elements are arranged in rows and columns.
+
+```{r}
+# Creating a matrix that have two 2 and 3 columns ranging from 1 to 6
+m <- matrix(c(1, 2, 3, 4, 5, 6), nrow=2, ncol=3)
+```
+
+```{r}
+print(m)
+```
+
+```{r}
+# Creating a matrix that have two 2 and 3 columns with character values and row/column names
+m2 <- matrix(c("A", "B", "C", "D", "E", "F"), nrow = 2, ncol = 3,
+               dimnames = list(c("Row1", "Row2"), c("Col1", "Col2", "Col3")))
+```
+
+You can use the attributes function to check the information of the matrix
+
+```{r}
+print(m2)
+```
+
+```{r}
+attributes(m2)
+```
+
+## 8.Basic Statistical Operations with R
+
+R is not just a programming language; it's a language designed specifically for statistics. Now that you know how to create vectors and matrices, let's learn how to perform some basic statistical operations.
+
+```{r}
+# Creating a numeric vector
+numbers <- c(5, 7, 9, 12, 15)
+
+numbers
+```
+
+We've created a numeric vector with the values 5, 7, 9, 12, and 15. Now, let's calculate the average of these numbers.
+
+```{r}
+# Calculating the mean of all values stored in the vector
+mean(numbers)
+```
+
+Now let's find the median of the same set of numbers.
+
+```{r}
+# Calculating the median of all values stored in the vector
+median(numbers)
+```
+
+To find the minimum or maximum value in our vector, we can use the `min()` and `max()` functions.
+
+```{r}
+# Calculating the minimum value in the vector
+min(numbers)
+
+# Calculating the maximum value in the vector
+max(numbers)
+```
+
+## 9.Creating and Manipulating Data Frames
+
+A data frame is a table where each column can contain data of different types (numeric, character, factor, etc.). Let's create a data frame using our vectors.
+
+Let's imagine we're studying the relationship between the amount of exercise people get in a week and their body fat percentage. We have collected data from a group of men and women who have different levels of exercise each week. Our goal is to determine if there's a correlation between the number of hours spent exercising and body fat percentage in these two groups.
+
+Once we create this dataframe, we can start analyze the data with R to answer some interesting questions such as: What is the relationship between exercise and body fat percentage? Does the correlation differ between men and women?
+
+### Create the data frame
+
+We will generate three vectors - one for exercise hours, one for body fat percentage, and one for gender. The `rep()` function in R allows us to repeat elements of a vector. Here, we use `rep("Men", 12)` to create a vector of 12 'Men' elements, and `rep("Women", 13)` to create a vector of 13 'Women' elements.
+
+```{r}
+# Creating a vector for exercise (in hours per week)
+exercise <- c(6, 2, 7, 8, 5, 7, 8, 6, 7, 3, 6, 6, 1, 2, 3, 4, 2, 3, 4, 2, 1, 1, 3, 5, 6)
+
+# Creating a vector for body fat (in %)
+body_fat <- c(20, 32, 15, 10, 25, 15, 12, 22, 18, 23, 13, 15, 29, 30, 25, 
+              28, 29, 29, 18, 26, 25, 27, 24, 15, 18)
+
+# Creating vectors for gender
+gender <- c(rep("Men", 12), rep("Women", 13))
+```
+
+```{r}
+# Creating a data frame
+df <- data.frame(exercise, body_fat, gender)
+```
+
+```{r}
+df
+```
+
+### Save and load datasets
+
+Now that we have our data frame ready, we can store it in our working directory with the `write.csv()` function. Remember that the `setwd()` function is useful for designating a working directory. It's also a good practice to check your current working directory and ensure that your files are being saved and loaded from the correct location.
+
+```{r}
+# Using getwd() and setwd() to check and set your working directory
+# Saving data frame to the current working directory
+write.csv(df, "data.csv")
+```
+
+You have now effectively created your own .csv file. The same kind of file that Microsoft Excel would generate when you create a spreadsheet. Now let's read the data file we just saved from our working directory with the `read_csv()` function.
+
+```{r}
+# Loading data frame back into R
+my_data <- read.csv("data.csv")
+```
+
+This is how you can load an actual data set into R. In this context, we are just going to load the data set we created ourselves.
+
+## 10.Data Visualizations with R
+
+R is not only a powerful tool for data manipulation and analysis, but also for data visualization. One of the most popular packages for creating high-quality graphics in R is ggplot2. Let's use it to create a scatter plot visualizing the relationship between exercise and body fat percentage in men.
+
+```{r}
+# Load ggplot2 package
+library(ggplot2)
+```
+
+```{r}
+# Creating a scatter plot for men
+# Define the dataset, x-axis, and y-axis
+ggplot(my_data[my_data$gender=="Men",], aes(x=exercise, y=body_fat)) +
+  geom_point(color='blue') +   # Plot the data with blue points
+  # Add title and labels to the graph
+  labs(x='Exercise (hours per week)', y='Body Fat (%)', title='Exercise vs Body Fat in Men') 
+```
+
+If this code looks intimidating, don't be concerned! This is the basic syntax associated with the ggplot2 package. The package has its own grammar, and most of the basic code will always look the same. As you get comfortable with data analysis you may want to learn more advanced ggplot2 grammar, but for now these are the very basics. 
+
+Here, the function `ggplot()` initializes a ggplot object. The `aes()` function inside `ggplot()` stands for aesthetics and is used to specify aesthetic mappings. It is used to map variables in the data to visual properties of the plot like the x-axis, y-axis, color, shape, size, etc. For example, in aes(x=exercise, y=body_fat), we are mapping the 'exercise' variable to the x-axis and 'body_fat' variable to the y-axis. Then we add layers to this base plot using + symbol. The `geom_point()` function is an example of a layer that adds scatterplot points to the base plot. Beyond scatter plots, ggplot2 has a variety of geometric objects (geom) to create different types of plots. For instance, `geom_histogram()` is used for creating histograms, `geom_line()` for line plots, `geom_bar()` for bar plots, etc. 
+
+You may have also noticed the dollar sign $\$$ used within the ggplot function. In R, the dollar sign is a special operator that allows us to access specific variables (or columns) within a data frame, following the format $data\_frame\$variable\_name$. For instance, $my\_data\$gender$ allows us to access the 'gender' column from the 'my_data' data frame. We can also use this operator in conjunction with a logical condition, such as $my\_data\$gender==``Men"$, which checks each row in the 'gender' column, marking it as TRUE if it equals "Men" and FALSE otherwise. This resulting series of TRUE and FALSE values can be used to subset the data frame, like so: my_data[my_data$gender=="Men",]. This command selects only those rows in 'my_data' where 'gender' equals "Men". 
+
+We can also overlay the data for women on the same plot. This will allow us to easily compare the two groups.
+
+```{r}
+# Creating a scatter plot for men and women
+# Define the dataset, x-axis, y-axis, and color by gender
+ggplot(my_data, aes(x=exercise, y=body_fat, color=gender)) +
+  geom_point() +   # Plot the data
+  # Add title, labels to the graph, and legend title
+  labs(x='Exercise (hours per week)', y='Body Fat (%)', title='Exercise vs Body Fat in Men and Women', color='Gender') 
+```
+
+From the scatter plots, we can observe a clear negative relationship between exercise and body fat percentage for both men and women - as the amount of exercise increases, the body fat percentage decreases. Furthermore, it's noticeable that women in the dataset generally engage in less exercise and have higher body fat percentages compared to men.
+
+## 11.Building Our First Regression Model
+
+Let's take a step further and build regression models to quantify the relationship between exercise and body fat percentage.
+
+```{r}
+# Load lm function from base R
+library(stats)
+```
+
+Let's begin by creating a regression model for the entire group.
+
+We're going to use a function called lm from the stats package in R. lm stands for linear model, and it allows us to create regression models (we will talk more about what these are later). In short, a simple regression model captures the relationship between one variable (in our case, exercise) and another (in our case, body fat). Exercise is our predictor, and body fat is the quantity of interest (output). The lm function is, in essence, going to identify the line of best fit that captures this relationship, on the basis of our observed data (i.e., the data set we have created).
+
+```{r}
+# Fit the model for all people
+# The response variable is the body fat percentage
+# while the predictors are exercise hours
+model_all <- lm(body_fat ~ exercise, data=my_data)
+```
+
+Next, let's visualize this model. We'll use the `geom_smooth()` function, which adds a smoothed mean line that fits best to the data points (a regression line in our case) to our scatter plot.
+
+```{r}
+# Plotting the regression line for all people
+ggplot(my_data, aes(x=exercise, y=body_fat)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "green") +  # line for all people
+  labs(x='Exercise (hours per week)', y='Body Fat (%)',
+       title='Regression Model of Exercise vs Body Fat for All People')
+```
+
+We can visualize from the above model that there is a negative relationship between exercise and body fat percentage. However, we might be masking underlying differences between the genders. Exercise may affect body fat differently in men and women due to biological differences, societal factors, or a combination of both. The relationship in men might be stronger, weaker, or completely different from that in women. Therefore, to better understand how exercise relates to body fat, we should consider conducting a separate analysis for each gender.
+
+In the light of these considerations, let's proceed to construct separate regression models for men and women. We will start with men.
+
+```{r}
+# Separate the data for men
+data_men <- my_data[my_data$gender=="Men",]
+
+# Fit the model for men
+model_men <- lm(body_fat ~ exercise, data = data_men)
+```
+
+And now let's visualize the model for men.
+
+```{r}
+# Plotting the regression line for men
+ggplot(data_men, aes(x=exercise, y=body_fat)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # line for men
+  labs(x='Exercise (hours per week)', y='Body Fat (%)',
+       title='Regression Model of Exercise vs Body Fat for Men')
+```
+
+Next, we'll build and visualize the model for women.
+
+```{r}
+# Separate the data for women
+data_women <- my_data[my_data$gender=="Women",]
+
+# Fit the model for women
+model_women <- lm(body_fat ~ exercise, data = data_women)
+```
+
+```{r}
+# Plotting the regression line for women
+ggplot(data_women, aes(x=exercise, y=body_fat)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # line for women
+  labs(x='Exercise (hours per week)', y='Body Fat (%)',
+       title='Regression Model of Exercise vs Body Fat for Women')
+```
+
+At first glance, the regression models for men, women, and the combined group all seem to suggest a similar pattern - a negative relationship between exercise and body fat percentage. This is consistent with our initial hypothesis that more exercise might lead to a lower body fat percentage. However, simply eyeballing the individual models might not provide us with a complete picture of the nuances in the data.
+
+It is beneficial to visually compare all three models on the same plot to discern any differences in the slopes or intercepts of the regression lines. These differences, if present, might indicate varying strengths or directions of the relationship between exercise and body fat for men and women.
+
+Therefore, let's plot all three models together to facilitate a more comprehensive comparison and potentially uncover more nuanced insights about the relationship between exercise and body fat across different genders.
+
+```{r}
+# Plotting the regression lines
+ggplot(my_data, aes(x=exercise, y=body_fat, color = gender)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "green") +  # line for all people
+  geom_smooth(data = data_men, method = "lm", se = FALSE, color = "red") +  # line for men
+  geom_smooth(data = data_women, method = "lm", se = FALSE, color = "blue") +  # line for women
+  labs(x='Exercise (hours per week)', y='Body Fat (%)',
+       title='Regression Models of Exercise vs Body Fat')
+```
+
+In the plot above, all regression pines show a negative relationship, implying that more exercise is generally associated with a lower body fat percentage. Interestingly, the slope of the line for men is steeper than that for women, indicating that exercise might have a stronger impact on body fat reduction in men than in women. This highlights the importance of segmenting our data and the value of exploring group-specific trends.
+
+## 12.Working with Real-world Data
+
+Now that you've got a good understanding of how R can be used to analyze and visualize data, it's time to apply this knowledge to real-world data. For this purpose, we'll use the renowned Titanic dataset from Kaggle. Kaggle is a vibrant platform where data science enthusiasts can discover numerous datasets, build models, and partake in competitions. The Titanic dataset provides information on the passengers aboard the Titanic, with details segmented according to factors such as economic status (class), sex, age, and survival status.
+
+You can download the dataset from https://www.kaggle.com/datasets/heptapod/titanic. Please ensure to download the train_and_test2.csv file and save it to your working directory if you want to run analysis on your local computer.
+
+```{r}
+# Load the library
+library(dplyr)
+library(stats)
+library(ggplot2)
+```
+
+In the previous sections, we've introduced you to the power of stats and ggplot2 packages in R. Now, let's expand our data manipulation toolkit with the versatile dplyr package. It is an integral part of the tidyverse ecosystem in R and stands for "Data Manipulation in R." Renowned for its robustness and intuitiveness, dplyr is a favorite amongst statisticians and data scientists.
+
+Here are a few key 'dplyr' functions we'll be using:
+
+- `select()`: This function helps us to keep only a subset of the many columns that may be present in a dataframe. It's a neat way to focus on only the data you're interested in.
+- `filter()`: As the name suggests, filter() allows you to filter the rows of a dataframe that meet certain conditions. This can be extremely useful in focusing on specific data points.
+- `%>%`, known as the pipe operator: This operator is perhaps one of the most empowering features of dplyr. The %>% operator works by taking the result of the left-hand side operation and 'piping' it as the first argument to the function on the right-hand side. It's like saying, "Take this, then do this." Here's a simple illustration:
+
+```{r}
+# Without pipe operator
+mean(c(1, 2, 3, 4, 5))
+
+# With pipe operator
+c(1, 2, 3, 4, 5) %>% mean()
+```
+
+In both cases, we're calculating the mean of the vector, but using the pipe operator makes the flow of operations more natural and easier to read. As we work with more complex and chained operations, the utility of %>% becomes even more pronounced.
+
+The `select()` function is handy when we want to choose specific columns from a dataframe. For instance, if we have a dataframe with columns "Name", "Age", "Gender", and "Salary", and we're only interested in the "Name" and "Age" columns, `select()` can help us obtain just that.
+
+```{r}
+# Sample data
+df <- data.frame(Name = c("Alice", "Bob", "Charlie"),
+                 Age = c(25, 30, 35),
+                 Gender = c("Female", "Male", "Male"),
+                 Salary = c(50000, 55000, 60000))
+
+# Using select() to retrieve only the Name and Age columns
+selected_data <- df %>% select(Name, Age)
+print(selected_data)
+```
+
+The `filter()` function is beneficial when we want to choose rows in a dataframe that satisfy certain conditions. Suppose we're interested in rows where "Age" is greater than 30 from the same dataframe. Here's how you can achieve that using `filter()`:
+
+```{r}
+# Using filter() to retrieve rows where Age is greater than 30
+filtered_data <- df %>% filter(Age > 30)
+print(filtered_data)
+```
+
+Now, let's delve into the real data analysis part and see how these functions can be employed in our data exploration and interpretation journey.
+
+```{r}
+# Load the dataset
+# For thoseof you who cannot read the file, please check two things. First, have you got the path right? Use the getwd() to get the current path
+#titanic <- read_csv('/Your own path/train_and_test2.csv')
+# Second, have you installed/loaded the needed package?
+titanic <- read.csv('train_and_test2.csv')
+```
+
+The `head()` function can be used to preview the initial rows of our dataset.
+
+```{r}
+# Preview the initial rows of the dataset
+head(titanic)
+```
+
+To know the total number of observations or rows in the dataset, we use the `nrow()` function.
+
+```{r}
+# Get total number of rows in the dataset
+nrow(titanic)
+```
+
+While the Titanic dataset comes with a wealth of information, not every variable might be relevant for our specific analysis. Moreover, some variable names, such as 'X2urvived' and 'Pclass', may not immediately convey their meaning, which can lead to confusion during the data exploration and modeling processes. Therefore, data cleaning - the process of preparing and refining data for analysis - is an indispensable step in any data-related project.
+
+To ensure our dataset is clean and ready for further investigation, we'll start by selecting only the variables we need - 'Age', 'Sex', 'Pclass', and 'X2urvived'. Simultaneously, we'll rename these variables to more intuitive terms such as 'Age', 'Sex', 'Passenger_Class', and 'Survival_Status'. By performing these steps, we make our dataset more understandable, setting the stage for a smoother and more effective analysis.
+
+```{r}
+# Clean and select variables from the dataset
+titanic_cleaned <- titanic %>%
+  rename(Age = Age, Sex = Sex, Class = Pclass, Survived = X2urvived) %>%
+  select(Age, Sex, Class, Survived)
+```
+
+```{r}
+# View the dataset after variable selection
+head(titanic_cleaned)
+```
+
+Our newly refined dataset now features a more understandable layout. Here, 'Survived' is our target variable indicating the passenger's survival status, where 0 = No, 1 = Yes. 'Class' stands for the ticket class of the passenger. 'Sex' is a binary variable where 0 = Male and 1 = Female.
+
+With the `unique()` function, we can determine the unique values present in the 'Sex' column.
+
+```{r}
+# Display unique values in the 'Sex' column
+unique(titanic_cleaned$Sex)
+```
+
+Recall that the `$` operator allows us to access specific columns in our dataframe. Here, `titanic_cleaned$Sex` allows us to access the 'Sex' column in our titanic_cleaned dataframe.
+
+The `table()` function helps us understand the distribution of observations in each 'Sex' group.
+
+```{r}
+# Display number of observations for each gender
+table(titanic_cleaned$Sex)
+```
+
+Let's visualize this information for a more intuitive understanding. We'll create a stacked bar plot to display the number of survivors in each 'Sex' group.
+
+```{r}
+# Create the plot
+ggplot(titanic_cleaned, aes(x = factor(Sex, labels = c("Male", "Female")), fill = as.factor(Survived))) +
+  geom_bar(position = "stack") +
+  labs(x = "Sex", y = "Count", fill = "Survived") +
+  # Change the labels of Survived to ‘Yes’ and ‘No’
+  scale_fill_discrete(labels = c("No", "Yes"), name = "Survived") 
+```
+
+The code above produces a stacked bar plot depicting the count of survivors based on gender in our refined Titanic dataset. Here's how it works:
+
+- `factor(Sex, labels = c("Male", "Female"))`: The factor function is used to change the levels of the 'Sex' variable. In our dataset, 'Sex' is encoded as 0 for male and 1 for female. With this function, we replace these 0s and 1s with more meaningful labels: "Male" and "Female". This will make our plot more readable.
+- `fill = as.factor(Survived)`: Here, we're telling ggplot to fill the bars of our plot based on the 'Survived' variable. We also use the as.factor function to convert 'Survived', which is encoded as integers (0 for No, 1 for Yes), to a factor variable. This means that 'ggplot' will treat it as a categorical variable, with different colours for each category.
+- `position = "stack"`: This is an argument to geom_bar that tells ggplot how to position the bars. In our case, we want a stacked bar plot, which means we want the bars for different 'Survived' categories (Yes and No) to be stacked on top of each other.
+
+We can now build a simple logistic regression model to predict the survival status based on 'Sex', 'Age', and 'Pclass'. Let's create this model using the `glm()` function.
+
+```{r}
+# Fit the model
+model <- glm(Survived ~ Sex + Age + Class, data = titanic_cleaned, family = binomial())
+```
+
+To quantify the relationship we observe. We can also see details of the model by calling the `summary()` function.
+
+```{r}
+# Print the summary of the model
+summary(model)
+```
+
+While the output may initially appear complex, there's no need for concern! We'll be delving into how to interpret these model summary tables in later parts of this course. So, stay tuned and all will become clear in time.
+
+
+
+
